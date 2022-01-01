@@ -5,11 +5,14 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"net/http"
+	_ "net/http/pprof"
 	"strconv"
 	"strings"
 	"time"
 )
 
+// Block is the basic building block
 type Block struct {
 	data         map[string]interface{}
 	hash         string
@@ -18,6 +21,7 @@ type Block struct {
 	pow          int
 }
 
+// Blockchain represents the blockchain
 type Blockchain struct {
 	genesisBlock Block
 	chain        []Block
@@ -42,6 +46,7 @@ func (b *Block) mine(difficulty int) {
 	}
 }
 
+// CreateBlockchain Creates a blockchain with given difficulty
 func CreateBlockchain(difficulty int) Blockchain {
 	genesisBlock := Block{
 		hash:      "0",
@@ -85,11 +90,17 @@ func (b Blockchain) isValid() bool {
 }
 
 func main() {
-	blockchain := CreateBlockchain(2)
+	go func() {
+		log.Println(http.ListenAndServe("localhost:6060", nil))
+	}()
+	start := time.Now()
+	fmt.Println(start)
+	blockchain := CreateBlockchain(6)
 
 	blockchain.addBlock("Alice", "Bob", 5)
 	blockchain.addBlock("John", "Bob", 2)
 
 	fmt.Printf("%#v", blockchain)
 	fmt.Println(blockchain.isValid())
+	fmt.Println(time.Now().Sub(start))
 }
