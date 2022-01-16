@@ -95,7 +95,7 @@ func main() {
 	}()
 	start := time.Now()
 	fmt.Println(start)
-	blockchain := CreateBlockchain(6)
+	blockchain := CreateBlockchain(5)
 
 	blockchain.addBlock("Alice", "Bob", 5)
 	blockchain.addBlock("John", "Bob", 2)
